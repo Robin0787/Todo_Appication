@@ -16,19 +16,21 @@ const TodoCard = ({ task }: { task: TTodo }) => {
         type="checkbox"
         name="taskStatus"
         id=""
-        className="cursor-pointer size-4 rounded-lg"
+        className="cursor-pointer size-4 rounded-lg mr-6"
         checked={isCompleted}
         onChange={handleToggleTaskStatus}
       />
-      <p className="font-semibold">{title}</p>
-      <div className={`${isCompleted ? "text-green-500" : "text-red-500"}`}>
+      <p className="font-semibold flex-1">{title}</p>
+      <div
+        className={`${isCompleted ? "text-green-500" : "text-red-500"} flex-1`}
+      >
         <p>{isCompleted ? "Done" : "Pending"}</p>
       </div>
-      <p>{description}</p>
-      <Button className="text-sm bg-gray-50 text-black/60 hover:text-black/60 hover:bg-gray-50 cursor-default">
+      <p className="flex-[2]">{description}</p>
+      <Button className="text-sm bg-gray-50 text-black/60 hover:text-black/60 hover:bg-gray-50 cursor-default flex-1">
         {priority}
       </Button>
-      <div className="space-x-8">
+      <div className="space-x-8 ml-4">
         <Button
           className="bg-red-600 px-3"
           onClick={() => dispatch(removeTodo(id))}
