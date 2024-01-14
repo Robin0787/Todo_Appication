@@ -2,10 +2,11 @@ import { TTodo } from "@/redux/features/todo/todo.interface";
 import { removeTodo, toggleTaskStatus } from "@/redux/features/todo/todoSlice";
 import { useAppDispatch } from "@/redux/hook";
 import { Button } from "../ui/button";
+import TodoEditModal from "./TodoEditModal";
 
 const TodoCard = ({ task }: { task: TTodo }) => {
   const dispatch = useAppDispatch();
-  const { id, title, description, isCompleted } = task;
+  const { id, title, description, priority, isCompleted } = task;
   const handleToggleTaskStatus = () => {
     dispatch(toggleTaskStatus(id));
   };
@@ -16,6 +17,7 @@ const TodoCard = ({ task }: { task: TTodo }) => {
         name="taskStatus"
         id=""
         className="cursor-pointer size-4 rounded-lg"
+        checked={isCompleted}
         onChange={handleToggleTaskStatus}
       />
       <p className="font-semibold">{title}</p>
@@ -23,6 +25,9 @@ const TodoCard = ({ task }: { task: TTodo }) => {
         <p>{isCompleted ? "Done" : "Pending"}</p>
       </div>
       <p>{description}</p>
+      <Button className="text-sm bg-gray-50 text-black/60 hover:text-black/60 hover:bg-gray-50 cursor-default">
+        {priority}
+      </Button>
       <div className="space-x-8">
         <Button
           className="bg-red-600 px-3"
@@ -43,22 +48,7 @@ const TodoCard = ({ task }: { task: TTodo }) => {
             />
           </svg>
         </Button>
-        <Button className="bg-[#5c53FE] px-3">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="size-5"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
-            />
-          </svg>
-        </Button>
+        <TodoEditModal todo={task} />
       </div>
     </section>
   );

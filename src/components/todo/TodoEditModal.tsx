@@ -9,59 +9,60 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
 import { TTodo } from "@/redux/features/todo/todo.interface";
-import { addTodo } from "@/redux/features/todo/todoSlice";
+import { updateTodoDetails } from "@/redux/features/todo/todoSlice";
 import { useAppDispatch } from "@/redux/hook";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { FormEvent, useState } from "react";
 import Dropdown from "./Dropdown";
 import { filterByPriorityOptions } from "./helper/constant";
 
-const AddTodoModal = () => {
-  const [task, setTask] = useState<string>("");
-  const [desc, setDesc] = useState<string>("");
-  const [priority, setPriority] = useState<string>("high");
+const TodoEditModal = ({ todo }: { todo: TTodo }) => {
+  const { id, title, description, priority } = todo;
+  const [task, setTask] = useState<string>(title);
+  const [desc, setDesc] = useState<string>(description);
+  const [todoPriority, setTodoPriority] = useState<string>(priority);
   const dispatch = useAppDispatch();
-  const { toast } = useToast();
-
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!task) {
-      toast({
-        title: "task is required!",
-      });
       throw new Error("task is required!");
     } else if (!desc) {
-      toast({
-        title: "description is required!",
-      });
       throw new Error("description is required!");
     }
-    const randomString = Math.random().toString(36).substring(2, 7);
     const taskDetails: TTodo = {
-      id: randomString,
+      id,
       title: task,
       description: desc,
-      priority,
+      priority: todoPriority,
     };
-    dispatch(addTodo(taskDetails));
-    setTask("");
-    setDesc("");
+    dispatch(updateTodoDetails(taskDetails));
   };
-
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-primary-gradient text-lg font-semibold">
-          Add Todo
+        <Button className="bg-[#5c53FE] px-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="size-5"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+            />
+          </svg>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add task</DialogTitle>
+          <DialogTitle>Update task</DialogTitle>
           <DialogDescription>
-            Add your task that you want to finish.
+            Update your task details as you want.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit}>
@@ -99,18 +100,18 @@ const AddTodoModal = () => {
               <Dropdown
                 title={"Select Priority"}
                 options={filterByPriorityOptions}
-                defaultOption={priority}
-                setOption={setPriority}
+                defaultOption={todoPriority}
+                setOption={setTodoPriority}
               >
                 <Button className="bg-transparent border text-black capitalize w-full hover:bg-gray-100 col-span-3">
-                  {priority}
+                  {todoPriority}
                 </Button>
               </Dropdown>
             </div>
           </div>
           <div className="flex justify-end">
             <DialogClose asChild>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit">Update</Button>
             </DialogClose>
           </div>
         </form>
@@ -119,4 +120,4 @@ const AddTodoModal = () => {
   );
 };
 
-export default AddTodoModal;
+export default TodoEditModal;
