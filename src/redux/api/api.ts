@@ -45,6 +45,14 @@ export const baseApi = createApi({
       }),
       invalidatesTags: ["todo"],
     }),
+    updateTodo: builder.mutation({
+      query: ({ _id, data }: { _id: string; data: Partial<TTodo> }) => ({
+        url: `/task/${_id}`,
+        method: "PUT",
+        body: { ...data },
+      }),
+      invalidatesTags: ["todo"],
+    }),
   }),
 });
 
@@ -53,4 +61,5 @@ export const {
   useAddTodoMutation,
   useDeleteTodoMutation,
   useToggleTodoStatusMutation,
+  useUpdateTodoMutation,
 } = baseApi;

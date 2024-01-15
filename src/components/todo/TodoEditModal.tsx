@@ -9,34 +9,34 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { TTodo } from "@/redux/features/todo/todo.interface";
-import { updateTodoDetails } from "@/redux/features/todo/todoSlice";
-import { useAppDispatch } from "@/redux/hook";
+import { useUpdateTodoMutation } from "@/redux/api/api";
+import { TTodo, TTodoFromDB } from "@/redux/features/todo/todo.interface";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { FormEvent, useState } from "react";
 import Dropdown from "./Dropdown";
 import { filterByPriorityOptions } from "./helper/constant";
 
-const TodoEditModal = ({ todo }: { todo: TTodo }) => {
-  const { id, title, description, priority } = todo;
+const TodoEditModal = ({ todo }: { todo: TTodoFromDB }) => {
+  const { _id, title, description, priority } = todo;
   const [task, setTask] = useState<string>(title);
   const [desc, setDesc] = useState<string>(description);
   const [todoPriority, setTodoPriority] = useState<string>(priority);
-  const dispatch = useAppDispatch();
+  const [updatedTodo] = useUpdateTodoMutation();
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!task) {
       throw new Error("task is required!");
     } else if (!desc) {
       throw new Error("description is required!");
+    } else if (!todoPriority) {
+      throw new Error("priority is required!");
     }
-    const taskDetails: TTodo = {
-      id,
+    const taskDetails: Partial<TTodo> = {
       title: task,
       description: desc,
       priority: todoPriority,
     };
-    dispatch(updateTodoDetails(taskDetails));
+    updatedTodo({ _id, data: taskDetails });
   };
   return (
     <Dialog>
