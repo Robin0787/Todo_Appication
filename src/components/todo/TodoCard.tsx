@@ -1,15 +1,22 @@
+import {
+  useDeleteTodoMutation,
+  useToggleTodoStatusMutation,
+} from "@/redux/api/api";
 import { TTodoFromDB } from "@/redux/features/todo/todo.interface";
-import { removeTodo, toggleTaskStatus } from "@/redux/features/todo/todoSlice";
-import { useAppDispatch } from "@/redux/hook";
 import { Button } from "../ui/button";
 import TodoEditModal from "./TodoEditModal";
 
 const TodoCard = ({ task }: { task: TTodoFromDB }) => {
-  const dispatch = useAppDispatch();
   const { _id, title, description, priority, isCompleted } = task;
+  const [deleteTodo] = useDeleteTodoMutation();
+  const [toggleTodoStatus] = useToggleTodoStatusMutation();
 
-  const handleToggleTaskStatus = () => {
-    dispatch(toggleTaskStatus(_id));
+  const handleToggleTaskStatus = (_id: string, status: boolean) => {
+    toggleTodoStatus({ _id, status: !status });
+  };
+
+  const handleDeleteTodo = (_id: string) => {
+    deleteTodo(_id);
   };
 
   return (
@@ -20,7 +27,9 @@ const TodoCard = ({ task }: { task: TTodoFromDB }) => {
         id=""
         className="cursor-pointer size-4 rounded-lg mr-6"
         checked={isCompleted}
-        onChange={handleToggleTaskStatus}
+        onChange={() => {
+          handleToggleTaskStatus(_id, isCompleted);
+        }}
       />
       <p className="font-semibold flex-1">{title}</p>
       <div
@@ -44,7 +53,9 @@ const TodoCard = ({ task }: { task: TTodoFromDB }) => {
       <div className="space-x-8 ml-4">
         <Button
           className="bg-red-600 px-3"
-          onClick={() => dispatch(removeTodo(_id))}
+          onClick={() => {
+            handleDeleteTodo(_id);
+          }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

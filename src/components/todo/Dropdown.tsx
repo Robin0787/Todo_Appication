@@ -40,6 +40,12 @@ const Dropdown = ({
               {option}
             </DropdownMenuRadioItem>
           ))}
+          <DropdownMenuRadioItem
+            value={""}
+            className="capitalize cursor-pointer"
+          >
+            All
+          </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -29,9 +29,8 @@ import { filterByPriorityOptions } from "./helper/constant";
 const AddTodoModal = () => {
   const [task, setTask] = useState<string>("");
   const [desc, setDesc] = useState<string>("");
-  const [priority, setPriority] = useState<string>("high");
-  // const dispatch = useAppDispatch();
-  const [addTodo, { isLoading }] = useAddTodoMutation();
+  const [priority, setPriority] = useState<string>("");
+  const [addTodo] = useAddTodoMutation();
   const { toast } = useToast();
 
   const onSubmit = (e: FormEvent) => {
@@ -46,6 +45,11 @@ const AddTodoModal = () => {
         title: "description is required!",
       });
       throw new Error("description is required!");
+    } else if (!priority) {
+      toast({
+        title: "priority is required!",
+      });
+      throw new Error("priority is required!");
     }
     const taskDetails: TTodo = {
       title: task,
@@ -125,7 +129,7 @@ const AddTodoModal = () => {
                   <SelectValue placeholder="Select a Priority" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectGroup>
+                  <SelectGroup defaultValue={priority}>
                     {filterByPriorityOptions.map((option, index) => (
                       <SelectItem
                         key={index}

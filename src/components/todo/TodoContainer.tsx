@@ -14,11 +14,11 @@ const TodoContainer = () => {
     setFilter(value);
   };
 
-  const { data, isLoading } = useGetTodosQuery(undefined);
+  const { data, isLoading } = useGetTodosQuery(filter);
 
-  const filteredTodos: TTodoFromDB[] = data?.data?.filter((todo: TTodoFromDB) =>
-    filter ? todo.priority === filter : true
-  );
+  // const filteredTodos: TTodoFromDB[] = data?.data?.filter((todo: TTodoFromDB) =>
+  //   filter ? todo.priority === filter : true
+  // );
 
   return (
     <section>
@@ -45,8 +45,8 @@ const TodoContainer = () => {
               <TodoLoadingSkeleton />
               <TodoLoadingSkeleton />
             </>
-          ) : filteredTodos.length > 0 ? (
-            filteredTodos.map((todo: TTodoFromDB) => (
+          ) : data.data.length > 0 ? (
+            data.data.map((todo: TTodoFromDB) => (
               <TodoCard key={todo._id} task={todo} />
             ))
           ) : (
