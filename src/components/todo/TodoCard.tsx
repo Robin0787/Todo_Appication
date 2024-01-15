@@ -1,15 +1,17 @@
-import { TTodo } from "@/redux/features/todo/todo.interface";
+import { TTodoFromDB } from "@/redux/features/todo/todo.interface";
 import { removeTodo, toggleTaskStatus } from "@/redux/features/todo/todoSlice";
 import { useAppDispatch } from "@/redux/hook";
 import { Button } from "../ui/button";
 import TodoEditModal from "./TodoEditModal";
 
-const TodoCard = ({ task }: { task: TTodo }) => {
+const TodoCard = ({ task }: { task: TTodoFromDB }) => {
   const dispatch = useAppDispatch();
-  const { id, title, description, priority, isCompleted } = task;
+  const { _id, title, description, priority, isCompleted } = task;
+
   const handleToggleTaskStatus = () => {
-    dispatch(toggleTaskStatus(id));
+    dispatch(toggleTaskStatus(_id));
   };
+
   return (
     <section className="bg-white rounded-md flex justify-between items-center p-3 border">
       <input
@@ -27,13 +29,22 @@ const TodoCard = ({ task }: { task: TTodo }) => {
         <p>{isCompleted ? "Done" : "Pending"}</p>
       </div>
       <p className="flex-[2]">{description}</p>
-      <Button className="text-sm bg-gray-50 text-black/60 hover:text-black/60 hover:bg-gray-50 cursor-default flex-1">
-        {priority}
-      </Button>
+      <div className="text-sm  text-black/60 flex-1 flex justify-start items-center gap-[5px]">
+        <div
+          className={`size-2 rounded-full ${
+            priority === "high"
+              ? "bg-red-500"
+              : priority === "medium"
+              ? "bg-yellow-500"
+              : "bg-green-500"
+          }`}
+        ></div>
+        <p className="capitalize">{priority}</p>
+      </div>
       <div className="space-x-8 ml-4">
         <Button
           className="bg-red-600 px-3"
-          onClick={() => dispatch(removeTodo(id))}
+          onClick={() => dispatch(removeTodo(_id))}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

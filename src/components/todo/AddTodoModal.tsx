@@ -31,11 +31,8 @@ const AddTodoModal = () => {
   const [desc, setDesc] = useState<string>("");
   const [priority, setPriority] = useState<string>("high");
   // const dispatch = useAppDispatch();
-  const [addTodo, { isLoading, isError, isSuccess, data }] =
-    useAddTodoMutation();
+  const [addTodo, { isLoading }] = useAddTodoMutation();
   const { toast } = useToast();
-
-  console.log({ isLoading, isError, isSuccess, data });
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -50,9 +47,7 @@ const AddTodoModal = () => {
       });
       throw new Error("description is required!");
     }
-    const randomString = Math.random().toString(36).substring(2, 7);
     const taskDetails: TTodo = {
-      id: randomString,
       title: task,
       description: desc,
       priority,
@@ -63,8 +58,6 @@ const AddTodoModal = () => {
     setTask("");
     setDesc("");
   };
-
-  console.log(priority);
 
   return (
     <Dialog>
