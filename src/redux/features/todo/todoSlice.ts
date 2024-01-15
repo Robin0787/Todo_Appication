@@ -14,7 +14,7 @@ const todoInitialState: TTodoInitialState = {
       id: "2",
       title: "Read book",
       description: "Enjoy the latest novel by your favorite author.",
-      priority: "high",
+      priority: "low",
       isCompleted: false,
     },
     {
@@ -24,20 +24,6 @@ const todoInitialState: TTodoInitialState = {
       priority: "medium",
       isCompleted: false,
     },
-    {
-      id: "4",
-      title: "Call friend",
-      description: "Catch up with a friend via phone or video call.",
-      priority: "low",
-      isCompleted: false,
-    },
-    {
-      id: "5",
-      title: "Learn coding",
-      description: "Work on coding exercises and explore new languages.",
-      priority: "low",
-      isCompleted: true,
-    },
   ],
 };
 
@@ -46,7 +32,7 @@ const todoSlice = createSlice({
   initialState: todoInitialState,
   reducers: {
     addTodo: (state, action: PayloadAction<TTodo>) => {
-      state.todos.unshift({ ...action.payload, isCompleted: false });
+      state.todos.unshift(action.payload);
     },
     removeTodo: (state, action: PayloadAction<string>) => {
       state.todos = state.todos.filter((todo) => todo.id !== action.payload);

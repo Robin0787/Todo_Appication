@@ -6,7 +6,9 @@ interface TContainerProps {
 
 const Container = ({ children }: TContainerProps) => {
   return (
-    <section className="h-screen w-full max-w-7xl mx-auto">{children}</section>
+    <section className="h-screen w-full max-w-7xl mx-auto px-5 xl:px-0">
+      {children}
+    </section>
   );
 };
 

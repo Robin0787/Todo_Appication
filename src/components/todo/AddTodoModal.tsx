@@ -11,19 +11,31 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { TTodo } from "@/redux/features/todo/todo.interface";
-import { addTodo } from "@/redux/features/todo/todoSlice";
-import { useAppDispatch } from "@/redux/hook";
+// import { addTodo } from "@/redux/features/todo/todoSlice";
+// import { useAppDispatch } from "@/redux/hook";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useAddTodoMutation } from "@/redux/api/api";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { FormEvent, useState } from "react";
-import Dropdown from "./Dropdown";
 import { filterByPriorityOptions } from "./helper/constant";
 
 const AddTodoModal = () => {
   const [task, setTask] = useState<string>("");
   const [desc, setDesc] = useState<string>("");
   const [priority, setPriority] = useState<string>("high");
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
+  const [addTodo, { isLoading, isError, isSuccess, data }] =
+    useAddTodoMutation();
   const { toast } = useToast();
+
+  console.log({ isLoading, isError, isSuccess, data });
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -44,11 +56,15 @@ const AddTodoModal = () => {
       title: task,
       description: desc,
       priority,
+      isCompleted: false,
     };
-    dispatch(addTodo(taskDetails));
+    // For Server
+    addTodo(taskDetails);
     setTask("");
     setDesc("");
   };
+
+  console.log(priority);
 
   return (
     <Dialog>
@@ -92,7 +108,7 @@ const AddTodoModal = () => {
                 autoComplete="off"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
+            {/* <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="description" className="text-right">
                 Priority
               </Label>
@@ -106,6 +122,29 @@ const AddTodoModal = () => {
                   {priority}
                 </Button>
               </Dropdown>
+            </div> */}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="description" className="text-right">
+                Priority
+              </Label>
+              <Select onValueChange={setPriority}>
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Select a Priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {filterByPriorityOptions.map((option, index) => (
+                      <SelectItem
+                        key={index}
+                        className="capitalize"
+                        value={option}
+                      >
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <div className="flex justify-end">

@@ -1,5 +1,5 @@
+import { useGetTodosQuery } from "@/redux/api/api";
 import { TTodo } from "@/redux/features/todo/todo.interface";
-import { useAppSelector } from "@/redux/hook";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import AddTodoModal from "./AddTodoModal";
@@ -8,12 +8,21 @@ import TodoCard from "./TodoCard";
 import { filterByPriorityOptions } from "./helper/constant";
 
 const TodoContainer = () => {
-  const { todos } = useAppSelector((state) => state.todos);
   const [filter, setFilter] = useState<string>("");
   const handleFilterPriority = (value: string) => {
     setFilter(value);
   };
-  const filteredTodos: TTodo[] = todos.filter((todo) =>
+
+  const { data, isLoading } = useGetTodosQuery(undefined);
+
+  if (isLoading) {
+    return (
+      <div className="absolute top-0 left-0 h-screen w-full bg-primary-gradient flex justify-center items-center text-4xl text-white">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+  const filteredTodos: TTodo[] = data.data.filter((todo: TTodo) =>
     filter ? todo.priority === filter : true
   );
   return (
@@ -34,7 +43,9 @@ const TodoContainer = () => {
       <section className="bg-red-600 w-full h-full rounded-xl p-1 space-y-3 bg-primary-gradient">
         <div className="bg-white p-5 rounded-lg w-full h-full space-y-3">
           {filteredTodos.length > 0 ? (
-            filteredTodos.map((todo) => <TodoCard key={todo.id} task={todo} />)
+            filteredTodos.map((todo: TTodo) => (
+              <TodoCard key={todo.id} task={todo} />
+            ))
           ) : (
             <div className="bg-white text-2xl font-bold p-5 flex justify-center items-center rounded-md">
               <p>There is no task pending</p>
